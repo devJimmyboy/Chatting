@@ -9,6 +9,8 @@ env:
 
 jobs:
   release:
+    environment:
+      name: build
     runs-on: ${{ matrix.os }}
 
     strategy:
