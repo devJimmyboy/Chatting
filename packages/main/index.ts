@@ -41,7 +41,7 @@ async function createWindow() {
     y: stateKeeper!.y,
     width: stateKeeper!.width,
     height: stateKeeper!.height,
-    icon: appIcon,
+    icon: appIcon || undefined,
     frame: false,
     transparent: true,
     backgroundColor: '#00000001',
@@ -87,7 +87,6 @@ async function createWindow() {
 app.whenReady().then(createWindow)
 
 app.on('window-all-closed', () => {
-  win.close()
   if (process.platform !== 'darwin') {
     app.quit()
     process.exit(0)

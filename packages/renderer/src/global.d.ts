@@ -13,5 +13,6 @@ declare global {
 
   }
   var client: import("@twurple/chat").ChatClient
+  var api: import("@twurple/api").ApiClient
 }
 

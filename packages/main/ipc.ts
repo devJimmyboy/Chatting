@@ -17,7 +17,8 @@ const auth = new ElectronAuthProvider({ clientId: import.meta.env.VITE_CLIENT_ID
 })
 
 app.whenReady().then(() => {
-  const ret = globalShortcut.register('F9', () => {
+
+  const ret = globalShortcut.register(settings.get("keybind") as string | null || "F9", () => {
     console.log('F9 was pressed');
     if (win) {
       win.setIgnoreMouseEvents(!ignoring, { forward: true });
@@ -55,6 +56,8 @@ ipcMain.handle("setIgnoringState", (e, state = !ignoring) => {
 
 ipcMain.handle("window-close", (e) => {
   if (win) win.close()
+  if (settings.window)
+    settings.window.close()
 })
 
 ipcMain.handle("window-minimize", (e) => {

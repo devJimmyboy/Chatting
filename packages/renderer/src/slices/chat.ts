@@ -90,6 +90,7 @@ const chatSlice = createSlice({
     sendMessage: (state) => {
       if (state.channel.length === 0) return;
       state.history.push(state.input)
+      if (state.history.length > 50) state.history.shift()
       client.say(state.channel, state.input);
       state.input = ""
       state.index = -1;

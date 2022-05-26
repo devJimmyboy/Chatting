@@ -17,6 +17,7 @@ import { setToken } from './slices/chat'
 import { HashRouter } from 'react-router-dom'
 import { PersistGate } from 'redux-persist/integration/react'
 import React from 'react'
+import { ApiClient } from '@twurple/api'
 
 // window.addEventListener('mouseenter', () => window.ipcRenderer.send('mouse-enter'))
 // window.addEventListener('mouseleave', () => window.ipcRenderer.send('mouse-leave'))
@@ -39,6 +40,7 @@ async function initChat() {
   if (token) {
     const auth = new StaticAuthProvider(import.meta.env.VITE_CLIENT_ID, token?.accessToken, ['chat:read', 'chat:edit'], 'user')
     window.client = new ChatClient({ authProvider: auth })
+    window.api = new ApiClient({ authProvider: auth })
   } else {
     window.client = new ChatClient({ logger: { minLevel: 'debug' } })
   }

@@ -103,7 +103,7 @@ export default function ChatInput({}: Props) {
             }}
             id="main-input"
             className="chat-input"
-            placeholder="Send a message..."
+            placeholder={`Send a message...`}
             rightSection={<WindowButtons />}
             icon={<DraggableRegion />}
             value={input}

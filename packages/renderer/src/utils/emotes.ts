@@ -132,6 +132,25 @@ export async function fetchEmotesForChannel(channel: string) {
   } else {
     totalErrors.push("Error getting 7tv global emotes");
   }
+  try {
+
+    let channelEmotes = await api.chat.getChannelEmotes(twitchID);
+    let globalEmotes = await api.chat.getGlobalEmotes();
+    // let subEmotes = await api.chat.getEmotesFromSets(user.)
+    let twitchEmotes = [...channelEmotes, ...globalEmotes];
+    for (var i = 0; i < twitchEmotes.length; i++) {
+      let emote = {
+        emoteName: twitchEmotes[i].name,
+        emoteURL: twitchEmotes[i].getImageUrl(4),
+      };
+      emotes.push(emote);
+    }
+  } catch (e) {
+    totalErrors.push("Error getting user:" + e);
+  }
+
+  emotes.sort((a, b) => a.emoteName.localeCompare(b.emoteName));
+
 
   return emotes;
 

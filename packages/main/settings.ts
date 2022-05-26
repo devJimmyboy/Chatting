@@ -2,6 +2,7 @@ import { join } from "path"
 import { app, BrowserWindow } from "electron";
 import ElectronStore from "electron-store";
 import { store } from './electron-store';
+
 class Settings {
   window!: BrowserWindow;
   constructor(private store: ElectronStore) {
@@ -11,7 +12,7 @@ class Settings {
         height: 600,
         show: false,
         frame: false,
-        icon: appIcon,
+        icon: appIcon || undefined,
         webPreferences: {
           nodeIntegration: true,
           preload: join(__dirname, '../preload/index.cjs'),
@@ -19,6 +20,9 @@ class Settings {
       });
       if (app.isPackaged) {
         this.window?.loadFile(join(__dirname, '../renderer/index.html'))
+        this.window.on("ready-to-show", () => {
+          this.window.webContents.send("register", "settings")
+        })
       } else {
         // 🚧 Use ['ENV_NAME'] avoid vite:define plugin
         const url = `http://${process.env['VITE_DEV_SERVER_HOST']}:${process.env['VITE_DEV_SERVER_PORT']}/settings`
@@ -27,6 +31,7 @@ class Settings {
         // this.window?.webContents.openDevTools({ mode: "undocked" })
         // win.webContents.openDevTools()
       }
+
     }).catch(console.error);
   }
 
