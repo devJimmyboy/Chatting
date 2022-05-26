@@ -2,7 +2,7 @@
   "name": "chatting",
   "productName": "Chatting",
   "private": true,
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "Twitch Chat Application.",
   "author": "devJimmyboy <jimmy@jimmyboy.dev>",
   "license": "MIT",
