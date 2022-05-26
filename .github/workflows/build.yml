@@ -26,10 +26,6 @@ jobs:
 
       - name: List ENV
         run: env
-        with:
-          VITE_CLIENT_ID: ${{ secrets.clientId }}
-          VITE_CLIENT_SECRET: ${{ secrets.clientSecret }}
-          VITE_REDIRECT_URI: ${{ secrets.redirectUri }}
 
       - name: Build/release Electron app
         uses: samuelmeuli/action-electron-builder@v1
