@@ -32,3 +32,7 @@ jobs:
           # If the commit is tagged with a version (e.g. "v1.0.0"),
           # release the app after building
           release: ${{ startsWith(github.ref, 'refs/tags/v') }}
+        env:
+          VITE_CLIENT_ID: ${{ secrets.clientId }}
+          VITE_CLIENT_SECRET: ${{ secrets.clientSecret }}
+          VITE_REDIRECT_URI: ${{ secrets.redirectUri }}
