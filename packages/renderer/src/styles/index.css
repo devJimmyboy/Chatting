@@ -1,0 +1,46 @@
+@import url(https://fonts.googleapis.com/css?family=Open+Sans:300,regular,500,600,700,800,300italic,italic,500italic,600italic,700italic,800italic);
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html,
+body,
+#root {
+  margin: 0 !important;
+  padding: 0 !important;
+  background-color: transparent !important;
+}
+
+body {
+  margin: 0;
+  font-family: 'Open Sans', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow: hidden;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
+}
+
+.window-bar {
+  @apply rounded-md;
+  -webkit-user-select: none;
+  -webkit-app-region: drag;
+  cursor: grab;
+  &:active {
+    cursor: grabbing;
+  }
+  & .no-drag {
+    -webkit-app-region: no-drag;
+  }
+}
+
+.ignoring {
+  /* -webkit-app-region: no-drag; */
+  opacity: 0.2;
+}
+
+.chat-input {
+  width: 100%;
+}
