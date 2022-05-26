@@ -7,6 +7,7 @@
   "author": "devJimmyboy <jimmy@jimmyboy.dev>",
   "license": "MIT",
   "main": "dist/main/index.cjs",
+  "repository": "https://github.com/devJimmyboy/Chatting.git",
   "scripts": {
     "dev": "node scripts/watch.mjs",
     "build": "tsc --noEmit -p packages/renderer/tsconfig.json && node scripts/build.mjs",
