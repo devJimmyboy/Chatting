@@ -3,9 +3,9 @@ name: Build/release
 on: push
 
 env:
-  VITE_CLIENT_ID: ${{ secrets.CLIENTID }}
-  VITE_CLIENT_SECRET: ${{ secrets.CLIENTSECRET }}
-  VITE_REDIRECT_URI: ${{ secrets.REDIRECTURI }}
+  VITE_CLIENT_ID: ${{ secrets.clientid }}
+  VITE_CLIENT_SECRET: ${{ secrets.clientsecret }}
+  VITE_REDIRECT_URI: ${{ secrets.redirecturi }}
 
 jobs:
   release:
