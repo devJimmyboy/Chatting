@@ -38,6 +38,5 @@
       "AppImage"
     ],
     "artifactName": "${productName}-${version}-Installer.${ext}"
-  },
-  "publish": "always"
+  }
 }

@@ -11,7 +11,7 @@
   "scripts": {
     "dev": "node scripts/watch.mjs",
     "build": "tsc --noEmit -p packages/renderer/tsconfig.json && node scripts/build.mjs",
-    "dist": "electron-builder",
+    "dist": "electron-builder -p onTag",
     "postinstall": "electron-builder install-app-deps"
   },
   "engines": {
