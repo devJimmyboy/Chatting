@@ -21,7 +21,7 @@ export function WindowButtons() {
       </ActionIcon>
       <ActionIcon
         onClick={() => {
-          window.ipcRenderer.invoke('window-settings')
+          window.open('/settings')
         }}>
         <Icon icon="fas:gear" />
       </ActionIcon>

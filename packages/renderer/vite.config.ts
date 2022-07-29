@@ -41,7 +41,7 @@ export default defineConfig({
   },
   server: {
     host: pkg.env.VITE_DEV_SERVER_HOST,
-    port: pkg.env.VITE_DEV_SERVER_PORT,
+    port: pkg.env.VITE_DEV_SERVER_PORT || 3000,
   },
 })
 
@@ -49,9 +49,7 @@ export default defineConfig({
  * For usage of Electron and NodeJS APIs in the Renderer process
  * @see https://github.com/caoxiemeihao/electron-vue-vite/issues/52
  */
-export function electron(
-  entries: Parameters<typeof optimizer>[0] = {}
-): Plugin {
+export function electron(entries: Parameters<typeof optimizer>[0] = {}): Plugin {
   const builtins = builtinModules.filter((t) => !t.startsWith('_'))
 
   /**

@@ -1,7 +1,7 @@
-import { Command, histUp, joinChannel, login, sendMessage, setToken, updateInput, histDown } from '@/slices/chat'
+import { Command, histUp, joinChannel, login, sendMessage, setToken, updateInput, histDown, clearCycle, turnCycle } from '@/slices/chat'
 import { Icon } from '@iconify/react'
-import { Box, FloatingTooltip, List, ListItem, Popover, Popper, TextInput, Tooltip } from '@mantine/core'
-import { useBooleanToggle } from '@mantine/hooks'
+import { Box, List, Popover, TextInput, ThemeIcon, Tooltip } from '@mantine/core'
+import { useDisclosure } from '@mantine/hooks'
 import React from 'react'
 import { useAppSelector, useAppDispatch } from '../hooks'
 import DraggableRegion, { WindowButtons } from './WindowBar'
@@ -18,7 +18,7 @@ export default function ChatInput({}: Props) {
   const input = useAppSelector((state) => state.chat.input)
   const dispatch = useAppDispatch()
   const commands = useAppSelector((state) => (state.chat.input.startsWith('/') ? state.chat.commands.filter((c) => c.available && c.code.startsWith(state.chat.input.split(' ')[0].substring(1))) : []))
-  const cycle = React.useRef<string[]>([])
+  const cycle = useAppSelector((state) => state.chat.cycle)
   const keyHandler = React.useCallback(
     (e: React.KeyboardEvent) => {
       if (e.repeat && !e.key.match(/(Tab|Backspace)/)) {
@@ -27,26 +27,18 @@ export default function ChatInput({}: Props) {
       }
       switch (e.key) {
         case 'Backspace':
-          cycle.current = []
+          dispatch(clearCycle())
           break
         case 'Tab':
           e.preventDefault()
           if (commands.length > 0) dispatch(updateInput(input + commands[0].code.substring(input.length - 1)))
           else {
-            const inputApp = input.split(' ')
-            const query = inputApp.pop()
-            if (!query) return
-            if (cycle.current.length === 0) cycle.current = emotes.filter((e) => e.match(new RegExp(`^${query}`, 'i')))
-            if (cycle.current.length === 0) return
-            const index = cycle.current.findIndex((c) => c === query)
-            const toAppend = cycle.current[(index + 1) % cycle.current.length]
-            const first = inputApp.join(' ').length === 0 ? '' : `${inputApp.join(' ')} `
-            dispatch(updateInput(first + toAppend))
+            dispatch(turnCycle())
           }
           break
         case 'Enter':
           e.preventDefault()
-          cycle.current = []
+          dispatch(clearCycle())
           if (commands.length > 0) {
             const cmd = commands[0]
             switch (cmd.code) {
@@ -86,11 +78,8 @@ export default function ChatInput({}: Props) {
         Channel: {curChannel || 'none'}
       </Box>
 
-      <Popover
-        className="w-full"
-        trapFocus={false}
-        width="100%"
-        target={
+      <Popover trapFocus={false} width="target" position="bottom" withinPortal opened={!ignoring && commands.length > 0}>
+        <Popover.Target>
           <TextInput
             variant="default"
             styles={{
@@ -110,15 +99,21 @@ export default function ChatInput({}: Props) {
             onChange={(e) => dispatch(updateInput(e.target.value))}
             onKeyDown={keyHandler}
           />
-        }
-        position="bottom"
-        placement="start"
-        opened={!ignoring && commands.length > 0}>
-        <List spacing="sm" className="flex flex-col px-4 w-full">
-          {commands.map((com, i) => (
-            <CommandView command={com} key={i} />
-          ))}
-        </List>
+        </Popover.Target>
+        <Popover.Dropdown className="flex flex-col px-4 w-full">
+          <List
+            spacing="sm"
+            center
+            icon={
+              <ThemeIcon radius="xl" size={24}>
+                <Icon icon="fas:command" fontSize={14} />
+              </ThemeIcon>
+            }>
+            {commands.map((com, i) => (
+              <CommandView command={com} key={i} />
+            ))}
+          </List>
+        </Popover.Dropdown>
       </Popover>
     </>
   )

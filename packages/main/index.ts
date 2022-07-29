@@ -1,11 +1,13 @@
-import "source-map-support/register"
+import 'source-map-support/register'
 import { join } from 'path'
-import { setupGlobalStateIPC } from 'electron-state-ipc';
+import { setupGlobalStateIPC } from 'electron-state-ipc'
 import { app, BrowserWindow, dialog, nativeImage, NativeImage, session, shell } from 'electron'
-import windowStateKeeper from "electron-window-state"
+import windowStateKeeper from 'electron-window-state'
 import { release } from 'os'
-import "./ipc"
+import installExtension, { REACT_DEVELOPER_TOOLS, REDUX_DEVTOOLS } from 'electron-devtools-installer'
+import './ipc'
 import './electron-store'
+
 // import './samples/npm-esm-packages'
 
 declare global {
@@ -24,10 +26,11 @@ if (!app.requestSingleInstanceLock()) {
   process.exit(0)
 }
 
-const state = setupGlobalStateIPC();
+const state = setupGlobalStateIPC()
 
-global.win = null
-global.appIcon = nativeImage.createFromPath(join(__dirname, '../../resources/icon.ico'))
+var win: BrowserWindow | null = null
+globalThis.win = win
+globalThis.appIcon = nativeImage.createFromPath(join(__dirname, '../../resources/icon.ico'))
 
 let stateKeeper: ReturnType<typeof windowStateKeeper> | null = null
 async function createWindow() {
@@ -35,7 +38,7 @@ async function createWindow() {
     defaultWidth: 800,
     defaultHeight: 300,
   })
-  const ses = session.fromPartition("persist:chatting")
+  const ses = session.fromPartition('persist:chatting')
   win = new BrowserWindow({
     x: stateKeeper!.x,
     y: stateKeeper!.y,
@@ -56,10 +59,10 @@ async function createWindow() {
     },
   })
 
-  stateKeeper.manage(win);
+  stateKeeper.manage(win)
   win.setIgnoreMouseEvents(true, { forward: true })
   win.focus()
-  globalThis.win = win;
+  globalThis.win = win
 
   if (app.isPackaged) {
     win.loadFile(join(__dirname, '../renderer/index.html'))
@@ -68,13 +71,13 @@ async function createWindow() {
     const url = `http://${process.env['VITE_DEV_SERVER_HOST']}:${process.env['VITE_DEV_SERVER_PORT']}`
 
     win.loadURL(url)
-    win?.webContents.openDevTools({ mode: "undocked" })
+    win?.webContents.openDevTools({ mode: 'detach' })
     // win.webContents.openDevTools()
   }
 
   // Test active push message to Renderer-process
   win.webContents.on('did-finish-load', () => {
-    win?.webContents.send('main-process-message', (new Date).toLocaleString())
+    win?.webContents.send('main-process-message', new Date().toLocaleString())
   })
 
   // Make all links open with the browser, not with the application
@@ -84,7 +87,17 @@ async function createWindow() {
   })
 }
 
-app.whenReady().then(createWindow)
+app
+  .whenReady()
+  .then(async () => {
+    if (import.meta.env.DEV) {
+      console.log('[DEV]', 'App is running in development mode')
+      await installExtension([REACT_DEVELOPER_TOOLS, REDUX_DEVTOOLS])
+        .then((name) => console.log(`Added Extension: ${name}`))
+        .catch((err) => console.log('An error occurred: ', err))
+    }
+  })
+  .then(createWindow)
 
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
@@ -109,13 +122,12 @@ app.on('activate', () => {
   }
 })
 
-process.on("unhandledRejection", (reason, p) => {
+process.on('unhandledRejection', (reason, p) => {
   console.error(reason, p)
-  dialog.showErrorBox("Unhandled Rejection", `${reason}\n${p}`)
+  dialog.showErrorBox('Unhandled Rejection', `${reason}\n${p}`)
 })
 
-process.on("uncaughtException", (err) => {
+process.on('uncaughtException', (err) => {
   console.error(err)
-  dialog.showErrorBox("Uncaught Exception", `${err.name}:\n${err.message}\n${err.stack}`)
-
+  dialog.showErrorBox('Uncaught Exception', `${err.name}:\n${err.message}\n${err.stack}`)
 })

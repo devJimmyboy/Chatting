@@ -51,7 +51,9 @@ const root = createRoot(document.getElementById('root')!)
 root.render(
   <StrictMode>
     <React.Suspense fallback={<Loader />}>
-      <Root />
+      <ElectronStateIPCContextProvider>
+        <Root />
+      </ElectronStateIPCContextProvider>
     </React.Suspense>
   </StrictMode>
 )
